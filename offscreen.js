@@ -103,15 +103,19 @@ async function drainPendingChunks() {
   }
 }
 
-async function startCapture(tabId) {
+async function startCapture(streamId, tabId) {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     return;
   }
 
-  mediaStream = await chrome.tabCapture.capture({
-    audio: true,
-    video: false,
-    targetTabId: tabId
+  mediaStream = await navigator.mediaDevices.getUserMedia({
+    audio: {
+      mandatory: {
+        chromeMediaSource: 'tab',
+        chromeMediaSourceId: streamId
+      }
+    },
+    video: false
   });
 
   if (!mediaStream) {
@@ -189,7 +193,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   (async () => {
     if (message?.type === 'OFFSCREEN_START_CAPTURE') {
       try {
-        await startCapture(message.tabId);
+        await startCapture(message.streamId, message.tabId);
         sendResponse({ success: true });
       } catch (err) {
         console.error('[LateMeet][offscreen] Failed to start capture:', err);
