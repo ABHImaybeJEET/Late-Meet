@@ -55,26 +55,64 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ——— Start Copilot (Audio Capture with User Gesture) ———
   const copilotBtn = document.getElementById('start-copilot-btn');
-  copilotBtn?.addEventListener('click', async () => {
+
+  async function handleStartAudio(btn) {
+    const textEl = btn.querySelector('.copilot-btn-text');
+    const originalText = textEl?.textContent || 'Start';
+
     try {
+      // Show loading state
+      btn.disabled = true;
+      if (textEl) textEl.textContent = 'Starting...';
+      btn.classList.add('loading');
+
       const tabs = await chrome.tabs.query({ url: 'https://meet.google.com/*' });
       if (tabs.length === 0) {
-        console.warn('No Google Meet tab found');
-        return;
+        throw new Error('No Google Meet tab found. Join a meeting first.');
       }
       const meetTab = tabs[0];
-      const streamId = await chrome.tabCapture.getMediaStreamId({ targetTabId: meetTab.id });
 
-      await chrome.runtime.sendMessage({
-        type: 'START_AUDIO_WITH_STREAM',
-        streamId: streamId,
-        tabId: meetTab.id
+      // Extract meeting ID from tab URL
+      const urlMatch = meetTab.url?.match(/meet\.google\.com\/([a-z\-]+)/);
+      const meetingId = urlMatch ? urlMatch[1] : null;
+
+      const response = await chrome.runtime.sendMessage({
+        type: 'MANUAL_START_AUDIO',
+        tabId: meetTab.id,
+        meetingId: meetingId
       });
-      setCopilotActive(true);
+
+      if (response && response.success) {
+        setCopilotActive(true);
+        // Immediately show meeting section and start timer
+        meetingSection.style.display = 'block';
+        noMeetingSection.style.display = 'none';
+        if (meetingId) {
+          document.getElementById('meeting-id').textContent = meetingId;
+        }
+        const badge = document.getElementById('status-badge');
+        badge.className = 'status-badge active';
+        badge.querySelector('.status-text').textContent = 'Recording...';
+        startDurationTimer(Date.now());
+      } else {
+        throw new Error(response?.error || 'Failed to start audio capture');
+      }
     } catch (err) {
       console.error('Failed to start audio capture:', err);
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      if (textEl) {
+        textEl.textContent = err.message.length > 40
+          ? 'Error — Check Console'
+          : err.message;
+        setTimeout(() => {
+          if (textEl) textEl.textContent = originalText;
+        }, 3000);
+      }
     }
-  });
+  }
+
+  copilotBtn?.addEventListener('click', () => handleStartAudio(copilotBtn));
 
   function setCopilotActive(active) {
     if (!copilotBtn) return;
