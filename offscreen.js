@@ -6,6 +6,8 @@ let chunkTimer = null;
 
 let pendingChunks = [];
 let isChunkRequested = false;
+let isStopping = false;
+let isDrainingQueue = false;
 
 const CHUNK_MS = 8000;
 const RMS_THRESHOLD = 0.012;
@@ -19,7 +21,11 @@ function toBase64(arrayBuffer) {
 
   for (let i = 0; i < bytes.length; i += chunkSize) {
     const slice = bytes.subarray(i, i + chunkSize);
-    chunks.push(String.fromCharCode(...slice));
+    let chunk = '';
+    for (let j = 0; j < slice.length; j += 1) {
+      chunk += String.fromCharCode(slice[j]);
+    }
+    chunks.push(chunk);
   }
 
   return btoa(chunks.join(''));
@@ -78,6 +84,19 @@ async function postChunk(blob) {
   });
 }
 
+async function drainPendingChunks() {
+  if (isDrainingQueue) return;
+  isDrainingQueue = true;
+  try {
+    while (pendingChunks.length > 0) {
+      const blob = pendingChunks.shift();
+      await postChunk(blob);
+    }
+  } finally {
+    isDrainingQueue = false;
+  }
+}
+
 async function startCapture(tabId) {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     return;
@@ -109,27 +128,13 @@ async function startCapture(tabId) {
     isChunkRequested = false;
   });
 
-  mediaRecorder.addEventListener('stop', async () => {
-    try {
-      for (const blob of pendingChunks) {
-        await postChunk(blob);
-      }
-    } catch (err) {
-      console.error('[LateMeet][offscreen] Failed to flush pending chunks:', err);
-    } finally {
-      pendingChunks = [];
-    }
-  });
-
   mediaRecorder.start();
 
   chunkTimer = setInterval(async () => {
     try {
+      if (isStopping) return;
       await flushAudioChunk();
-      while (pendingChunks.length > 0) {
-        const blob = pendingChunks.shift();
-        await postChunk(blob);
-      }
+      await drainPendingChunks();
     } catch (err) {
       console.error('[LateMeet][offscreen] Chunk pipeline error:', err);
     }
@@ -141,10 +146,17 @@ async function stopCapture() {
     clearInterval(chunkTimer);
     chunkTimer = null;
   }
+  isStopping = true;
 
   if (mediaRecorder && mediaRecorder.state === 'recording') {
-    mediaRecorder.stop();
+    const recorder = mediaRecorder;
+    await new Promise(resolve => {
+      recorder.addEventListener('stop', resolve, { once: true });
+      recorder.stop();
+    });
   }
+
+  await drainPendingChunks();
 
   if (mediaStream) {
     mediaStream.getTracks().forEach(track => track.stop());
@@ -160,6 +172,7 @@ async function stopCapture() {
   analyserNode = null;
   pendingChunks = [];
   isChunkRequested = false;
+  isStopping = false;
   consecutiveSilent = 0;
 }
 

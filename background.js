@@ -107,6 +107,14 @@ async function getSettings() {
   return result.settings || {};
 }
 
+function sanitizePromptText(value) {
+  return String(value || '')
+    .replace(/[\u0000-\u001F\u007F]/g, ' ')
+    .replace(/```/g, '')
+    .replace(/<\/?script[^>]*>/gi, '')
+    .slice(0, 2000);
+}
+
 async function ensureOffscreenDocument() {
   const contexts = await chrome.runtime.getContexts({
     contextTypes: ['OFFSCREEN_DOCUMENT'],
@@ -166,14 +174,18 @@ async function summarizeTranscriptIfNeeded() {
   if (!state.isActive || state.transcript.length === 0) return;
 
   const settings = await getSettings();
-  const intervalSeconds = Number(settings.summarizationInterval || 30);
+  const requestedInterval = Number(settings.summarizationInterval);
+  const intervalSeconds = Number.isFinite(requestedInterval) && requestedInterval > 0 ? requestedInterval : 30;
   const elapsed = Math.floor((Date.now() - state.lastSummarizedAt) / 1000);
   if (state.lastSummarizedAt && elapsed < intervalSeconds) return;
 
   const apiKey = await getApiKey();
   if (!apiKey) return;
 
-  const transcriptWindow = state.transcript.slice(-25).map(e => `${e.speaker}: ${e.text}`).join('\n');
+  const transcriptWindow = state.transcript
+    .slice(-25)
+    .map(e => `${sanitizePromptText(e.speaker)}: ${sanitizePromptText(e.text)}`)
+    .join('\n');
   if (!transcriptWindow.trim()) return;
 
   const userPrompt = `Analyze this transcript and return strict JSON with fields summary, topics, decisions, actionItems, currentTopic, sentiment, keyInsights, questionsRaised.\n\nPrevious summary: ${state.summary || 'None'}\n\nTranscript:\n${transcriptWindow}`;

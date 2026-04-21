@@ -23,6 +23,7 @@
       '[data-participant-id] [aria-label]'
     ]
   };
+  const MAX_PARTICIPANT_NAME_LEN = 120;
 
   function queryFirst(selectors, root = document) {
     for (const selector of selectors) {
@@ -157,7 +158,7 @@
       document.querySelectorAll(selector).forEach(node => {
         const label = node.getAttribute('aria-label');
         const text = (label || node.textContent || '').trim();
-        if (text && text.length < 120) names.add(text);
+        if (text && text.length < MAX_PARTICIPANT_NAME_LEN) names.add(text);
       });
 
       if (names.size > 0) break;

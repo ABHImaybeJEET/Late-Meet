@@ -248,7 +248,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       const isLate = lateJoiners?.includes(name);
       const rawName = String(name || '');
       const safeName = escapeHtml(rawName);
-      const initials = escapeHtml(rawName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2));
+      const initials = escapeHtml(
+        rawName
+          .split(' ')
+          .filter(Boolean)
+          .map(w => w[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2)
+      );
       return `
         <div class="participant-item">
           <div class="participant-avatar">${initials}</div>
