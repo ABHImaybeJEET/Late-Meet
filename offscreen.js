@@ -157,8 +157,11 @@ async function stopCapture() {
   if (mediaRecorder && mediaRecorder.state === 'recording') {
     const recorder = mediaRecorder;
     await new Promise(resolve => {
+      const timeout = setTimeout(resolve, 2000);
       recorder.addEventListener('stop', resolve, { once: true });
+      recorder.addEventListener('error', resolve, { once: true });
       recorder.stop();
+      recorder.addEventListener('stop', () => clearTimeout(timeout), { once: true });
     });
   }
 

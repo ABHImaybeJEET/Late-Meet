@@ -270,6 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function sanitizeTopicStatus(status) {
+    // UI supports only active/completed badges; unknown values render as active.
     return status === 'completed' ? 'completed' : 'active';
   }
 

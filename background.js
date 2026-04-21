@@ -8,6 +8,7 @@ const MAX_PROMPT_LENGTH = 2000;
 const TRANSCRIPT_WINDOW_SIZE = 25;
 const SUMMARIZATION_MAX_TOKENS = 1200;
 const JOINER_MESSAGE_MAX_TOKENS = 120;
+// Delay late-joiner auto messages until 60s to avoid lobby/join churn spam.
 const MIN_MEETING_DURATION_FOR_WELCOME = 60;
 
 const state = {
@@ -193,7 +194,7 @@ async function summarizeTranscriptIfNeeded() {
     .join('\n');
   if (!transcriptWindow.trim()) return;
 
-  const userPrompt = `Analyze this transcript and return strict JSON with fields summary, topics, decisions, actionItems, currentTopic, sentiment, keyInsights, questionsRaised.\n\nPrevious summary: ${state.summary || 'None'}\n\nTranscript:\n${transcriptWindow}`;
+  const userPrompt = `Analyze this transcript and return strict JSON with fields summary, topics, decisions, actionItems, currentTopic, sentiment, keyInsights, questionsRaised.\n\nPrevious summary: ${sanitizePromptText(state.summary || 'None')}\n\nTranscript:\n${transcriptWindow}`;
 
   const response = await fetch(OPENAI_CHAT_URL, {
     method: 'POST',
@@ -255,6 +256,7 @@ function detectNewJoiners(currentList) {
 }
 
 async function generateLateJoinerMessage(joinerName) {
+  const safeJoinerName = sanitizePromptText(joinerName);
   const context = {
     duration: getDuration(),
     currentTopic: state.currentTopic,
@@ -268,7 +270,7 @@ async function generateLateJoinerMessage(joinerName) {
     const apiKey = await getApiKey();
     if (!apiKey) return fallback;
 
-    const prompt = `A participant named ${joinerName} joined late. Meeting duration: ${Math.round(context.duration / 60)} minutes. Current topic: ${context.currentTopic || 'General discussion'}. Recent topics: ${JSON.stringify(context.topics || [])}. Decisions: ${JSON.stringify(context.decisions || [])}. Write a short welcome message under 3 sentences. Output plain text only.`;
+    const prompt = `A participant named ${safeJoinerName} joined late. Meeting duration: ${Math.round(context.duration / 60)} minutes. Current topic: ${sanitizePromptText(context.currentTopic || 'General discussion')}. Recent topics: ${sanitizePromptText(JSON.stringify(context.topics || []))}. Decisions: ${sanitizePromptText(JSON.stringify(context.decisions || []))}. Write a short welcome message under 3 sentences. Output plain text only.`;
 
     const response = await fetch(OPENAI_CHAT_URL, {
       method: 'POST',

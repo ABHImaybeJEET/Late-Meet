@@ -23,7 +23,7 @@
       '[data-participant-id] [aria-label]'
     ]
   };
-  // Defensive cap to ignore malformed/concatenated DOM labels that are not real participant names.
+  // Defensive cap based on realistic display names; blocks malformed concatenated labels.
   const MAX_PARTICIPANT_NAME_LEN = 120;
 
   function queryFirst(selectors, root = document) {
@@ -159,7 +159,7 @@
       document.querySelectorAll(selector).forEach(node => {
         const label = node.getAttribute('aria-label');
         const text = (label || node.textContent || '').trim();
-        if (text && text.length < MAX_PARTICIPANT_NAME_LEN) names.add(text);
+        if (text.length > 0 && text.length < MAX_PARTICIPANT_NAME_LEN) names.add(text);
       });
 
       if (names.size > 0) break;
