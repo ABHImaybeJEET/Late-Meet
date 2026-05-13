@@ -1,7 +1,7 @@
 {
-  "name": "extension",
+  "name": "late-meet",
   "version": "1.0.0",
-  "description": "<div align=\"center\">   <img src=\"icons/icon128.png\" alt=\"AI Meeting Copilot Logo\" width=\"120\" />",
+  "description": "Privacy-first AI meeting copilot for Google Meet with real-time transcription and late-joiner summaries.",
   "main": "background.js",
   "type": "module",
   "scripts": {
@@ -13,9 +13,20 @@
     "type": "git",
     "url": "git+https://github.com/shouri123/Late-Meet.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "chrome-extension",
+    "google-meet",
+    "ai",
+    "meeting-copilot",
+    "transcription",
+    "privacy",
+    "elevenlabs",
+    "openai",
+    "manifest-v3",
+    "byok"
+  ],
+  "author": "Shouri",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/shouri123/Late-Meet/issues"
   },

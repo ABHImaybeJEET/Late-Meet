@@ -26,3 +26,6 @@ package-lock.json
 dist/
 build/
 *.zip
+
+# External repos
+Late-Meet-Website/

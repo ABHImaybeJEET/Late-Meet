@@ -1,45 +1,52 @@
-# Late Meet Roadmap - Improving Stability and Intelligence
+# Late Meet Roadmap
 
-<objective>
-Migrate the Late Meet extension to TypeScript for enhanced stability. 
-Implement AI transcription refinement to improve clarity.
-Upgrade participant counting to a robust, event-driven algorithm.
-</objective>
+This roadmap outlines the planned features and long-term vision for Late Meet. Our goal is to build the most privacy-respecting, intelligent meeting copilot that lives entirely in your browser.
 
-## Phase 1: Foundation & TypeScript Migration
-<task type="auto" effort="medium">
-  <name>Initialize Build System</name>
-  <action>
-    Initialize npm, install Vite, TypeScript, and @crxjs/vite-plugin.
-    Create vite.config.ts and tsconfig.json.
-  </action>
-  <verify>npm run build succeeds</verify>
-</task>
+## ✅ Completed
 
-<task type="auto" effort="high">
-  <name>Migrate Core Logic to TypeScript</name>
-  <action>
-    Convert background.js, content.js, and offscreen.js to .ts.
-    Introduce types and interfaces for the state and message passing.
-  </action>
-  <verify>type-check passes</verify>
-</task>
+### Phase 1: Core Foundation
+- [x] Native Google Meet integration without bot participants
+- [x] Real-time audio capture via Chrome Offscreen APIs
+- [x] Premium monochrome UI extension & side panel
+- [x] BYOK (Bring Your Own Key) integration for API access
+- [x] Manifest V3 compliant architecture
 
-## Phase 2: Intelligence & Counting
-<task type="auto" effort="medium">
-  <name>AI Transcription Refinement</name>
-  <action>
-    Implement refineTranscription function in background.ts.
-    Update the audio processing pipeline.
-  </action>
-  <verify>transcript entries show refined text</verify>
-</task>
+### Phase 2: Local & Privacy Overhaul
+- [x] Strip all Supabase/backend dependencies
+- [x] Local-first session management via `chrome.storage.local`
+- [x] ElevenLabs Scribe integration for superior transcription
+- [x] Intelligent rolling LLM context prompting
+- [x] Late-joiner detection and automated briefing overlays
 
-<task type="auto" effort="medium">
-  <name>Advanced Participant Counting</name>
-  <action>
-    Implement event-driven counting logic (Host=1, Join=+1).
-    Update state and broadcast mechanisms.
-  </action>
-  <verify>count increments correctly when participants join</verify>
-</task>
+---
+
+## 🔄 Planned Features
+
+### 🟢 Beginner-Friendly
+- [ ] Add screenshots and demo GIF to README
+- [ ] Export meeting summary as `.md` file
+- [ ] Copy-to-clipboard for action items and decisions
+- [ ] Dark/light mode toggle for side panel
+- [ ] Improve onboarding experience in Options page
+- [ ] Better error messages for invalid or expired API keys
+
+### 🟡 Intermediate
+- [ ] Meeting summary templates (standup, retrospective, 1:1)
+- [ ] Local transcript search within side panel
+- [ ] Meeting history page with past session recall
+- [ ] Chrome keyboard shortcuts to start/stop copilot
+- [ ] Multi-language summary output
+- [ ] Action item detection with assignee routing
+
+### 🔴 Advanced
+- [ ] Offline transcription using local Whisper / WebGPU
+- [ ] Speaker diarization (identify who said what)
+- [ ] Zoom and Microsoft Teams support
+- [ ] End-to-end encrypted local meeting archive
+- [ ] Plugin system for custom summary formats
+- [ ] Privacy audit dashboard (show what data exists and where)
+- [ ] Voice Activity Detection (VAD) to reduce API costs
+
+---
+
+*Note: This roadmap is a living document. Priorities may shift based on community feedback and contributions. Have an idea? [Open an issue!](https://github.com/shouri123/Late-Meet/issues)*

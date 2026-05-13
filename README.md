@@ -1,23 +1,38 @@
 <div align="center">
-  <img src="src/icons/icon128.png" alt="AI Meeting Copilot Logo" width="120" />
+  <img src="src/icons/icon128.png" alt="Late Meet Logo" width="120" />
 
-  # AI Meeting Copilot
+  # Late Meet — Privacy-First AI Meeting Copilot for Google Meet
 
-  **Privacy-first, real-time meeting intelligence without the intrusive bots.**  
-  *Never ask "what did I miss?" again.*
+  **Catch up instantly when you join a meeting late — without bots, servers, or creepy transcript storage.**
 
   [![Version](https://img.shields.io/badge/Version-1.0.0-black?style=for-the-badge&logo=googlechrome)](https://github.com/shouri123/Late-Meet)
   [![License](https://img.shields.io/badge/License-MIT-black?style=for-the-badge)](LICENSE)
   [![Platform](https://img.shields.io/badge/Platform-Google_Meet-black?style=for-the-badge&logo=googlemeet)](https://meet.google.com)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-black?style=for-the-badge)](CONTRIBUTING.md)
+  [![Code of Conduct](https://img.shields.io/badge/Conduct-Contributor_Covenant-black?style=for-the-badge)](CODE_OF_CONDUCT.md)
 </div>
 
 <br />
+
+<p align="center">
+  <a href="#-the-problem">Problem</a> ·
+  <a href="#-our-solution">Solution</a> ·
+  <a href="#-key-features">Features</a> ·
+  <a href="#%EF%B8%8F-architecture--how-it-works">Architecture</a> ·
+  <a href="#%EF%B8%8F-installation--setup">Installation</a> ·
+  <a href="#-technology-stack">Tech Stack</a> ·
+  <a href="#-roadmap">Roadmap</a> ·
+  <a href="#-contributing">Contributing</a> ·
+  <a href="#-security">Security</a>
+</p>
+
+---
 
 ## 🌟 The Problem
 Joining a meeting late or losing focus for a moment leaves participants disconnected and scrambling for context. Existing AI note-takers add an obnoxious "Bot has joined" participant to your call, invade your team's privacy by storing transcripts on remote servers, and often generate massive, unreadable blocks of text instead of punchy, actionable insights.
 
 ## 💡 Our Solution
-**AI Meeting Copilot** lives entirely natively within your browser. Without adding any disruptive bots to the call, it securely captures audio directly from the Chrome tab. It leverages **ElevenLabs' Scribe API** for state-of-the-art multilingual transcription and **OpenAI GPT models** for intelligent summarization, providing a stunning, high-performance side-panel dashboard.
+**Late Meet** lives entirely natively within your browser. Without adding any disruptive bots to the call, it securely captures audio directly from the Chrome tab. It leverages **ElevenLabs' Scribe API** for state-of-the-art multilingual transcription and **OpenAI GPT models** for intelligent summarization, providing a stunning, high-performance side-panel dashboard.
 
 We designed this with a **local-first philosophy**: all meeting data is processed locally using `chrome.storage.local` during the session, and you only need your own API keys. No external databases. No user tracking.
 
@@ -43,6 +58,8 @@ The extension is built natively on Manifest V3 using **TypeScript and Vite 5** f
 3. **`content.ts` (The UI Injector):** Injects floating buttons and briefing overlays. It features a hardened chat automation engine (`execCommand` based) to reliably deliver welcome messages to late joiners.
 4. **AI Intelligence Layer:** Uses ElevenLabs STT for capturing speech and dynamic GPT models (like `gpt-4o-mini`) for processing text into structured insights, including Decisions, Action Items, and Strategic Sentiment.
 5. **Local Storage:** Securely stores session data in `chrome.storage.local`. After each meeting, you decide to Save or Discard—nothing leaves your browser without your consent.
+
+> 📖 For a detailed technical deep-dive, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ---
 
@@ -83,7 +100,7 @@ The extension is built natively on Manifest V3 using **TypeScript and Vite 5** f
 * **Build Tools:** TypeScript, Vite 5, `@crxjs/vite-plugin`.
 * **Design System:** Custom Vanilla CSS, high-contrast monochrome aesthetic, SVG-native iconography.
 * **Storage:** `chrome.storage.local` (Local-first, NO BAAS dependencies).
-* **AI Pipeline:** ElevenLabs STT (Scribe v1) for transcription, and dynamic GPT models for Intelligence/Summarization.
+* **AI Pipeline:** ElevenLabs STT (Scribe v2) for transcription, and dynamic GPT models for Intelligence/Summarization.
 
 ---
 
@@ -98,29 +115,58 @@ The extension is built natively on Manifest V3 using **TypeScript and Vite 5** f
 ### Phase 2: Local & Privacy Overhaul ✅
 - Strip Supabase/backend dependencies.
 - Local-first session management and storage.
-- VAD (Voice Activity Detection) implementation to reduce API cost.
+- ElevenLabs Scribe integration for superior transcription.
 - Intelligent rolling LLM context prompting.
 
 ### Phase 3: Platform Expansion 🔄 *(Planned)*
-- **Offline/Native Support:** Transition to an NPM package / Terminal CLI to support desktop apps like Zoom and Microsoft Teams.
-- **Smart Tracking:** Enhanced detection for action item assignee routing based on voice mapping.
+- **Offline/Native Support:** Offline transcription via local Whisper / WebGPU.
+- **Smart Tracking:** Speaker diarization and action item assignee routing.
+- **Multi-Platform:** Zoom and Microsoft Teams support.
 - **On-the-fly Translation:** Bridging language gaps during international calls.
+
+> 📖 See the full roadmap with contributor-friendly tasks at [`ROADMAP.md`](ROADMAP.md).
 
 ---
 
 ## 🤝 Contributing
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](../../issues). 
+
+Contributions, issues, and feature requests are welcome! We have labeled issues for all skill levels.
+
+**Quick start:**
+1. Fork the repo and clone locally
+2. `npm install` → `npm run build`
+3. Load the `dist/` folder in Chrome
+4. Pick an issue labeled [`good first issue`](https://github.com/shouri123/Late-Meet/labels/good%20first%20issue) or [`help wanted`](https://github.com/shouri123/Late-Meet/labels/help%20wanted)
 
 When contributing:
-1. Emphasize vanilla, zero-dependency Javascript workflows where possible.
+1. Emphasize vanilla, zero-dependency JavaScript workflows where possible.
 2. Adhere strictly to the monochromatic UI design system.
+
+> 📖 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full setup instructions, project structure walkthrough, and PR guidelines.
+
+---
+
+## 🔒 Security
+
+Late Meet follows a strict **BYOK (Bring Your Own Key)** model with **local-only data storage**. No meeting data ever leaves your browser without your consent.
+
+If you discover a security vulnerability, **please do not open a public issue**. Report it privately to **chakrabortyshouri@gmail.com**.
+
+> 📖 See [`SECURITY.md`](SECURITY.md) for our full security policy and data handling practices.
+
+---
+
+## 💬 Support
+
+Need help? Check out our [Support guide](SUPPORT.md) or open a [Discussion](https://github.com/shouri123/Late-Meet/discussions).
 
 ---
 
 ## 📜 License
-Distributed under the MIT License. See `LICENSE` for more information.
+
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
 
 <div align="center">
   <br />
-  <i>Built for high-performance teams who value focus.</i>
+  <i>Built for high-performance teams who value focus and privacy.</i>
 </div>
