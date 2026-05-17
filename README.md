@@ -34,6 +34,7 @@
 - [⚙️ Installation & Developer Setup](#%EF%B8%8F-installation--developer-setup)
 - [🛠️ Technology Stack](#%EF%B8%8F-technology-stack)
 - [🧡 GSSoC 2026 Contribution Guide](#-gssoc-2026-contribution-guide)
+- [🚀 Active & Open GSSoC 2026 Issues](#-active--open-gssoc-2026-issues)
 - [🗺️ Project Roadmap](#%EF%B8%8F-project-roadmap)
 - [🐛 Known Issues](#-known-issues)
 - [🔒 Security & Privacy First](#-security--privacy-first)
@@ -241,6 +242,46 @@ Before making a commit, make sure your code aligns perfectly with our quality ch
   ```bash
   npm run type-check
   ```
+
+---
+
+## 🚀 Active & Open GSSoC 2026 Issues
+
+Here is the official bank of **14 active and open issues** currently available for GSSoC 2026 contributors. You can click on the issue link to claim it on GitHub!
+
+### ✨ Category 1: Feature Requests
+
+| Issue #                                                 | Title                                                                | Difficulty      | Value Proposition                                                                 |
+| :------------------------------------------------------ | :------------------------------------------------------------------- | :-------------- | :-------------------------------------------------------------------------------- |
+| [#34](https://github.com/shouri123/Late-Meet/issues/34) | Silent Audio Chunk Filtering via Voice Activity Detection (VAD)      | 🔴 Advanced     | Minimizes ElevenLabs transcription costs by dropping silent audio slices locally. |
+| [#35](https://github.com/shouri123/Late-Meet/issues/35) | Zero-Overhead Speaker Diarization using Meet's DOM Indicators        | 🟡 Intermediate | Replaces generic `"Audio"` speaker tags with actual participant names.            |
+| [#36](https://github.com/shouri123/Late-Meet/issues/36) | Offline-Resilient API Request Queue with Jittered Backoff            | 🟡 Intermediate | Enqueues and retries requests during brief internet drops without data loss.      |
+| [#37](https://github.com/shouri123/Late-Meet/issues/37) | Dual-Channel Exporter (Markdown & JSON Files) with Side-Panel Toasts | 🟢 Beginner     | Allows direct downloads of session data and modern clipboard copy toasts.         |
+| [#38](https://github.com/shouri123/Late-Meet/issues/38) | Dynamic Conversational Slicing via Vocal Pause Detection             | 🔴 Advanced     | Cuts chunks naturally during speech pauses instead of arbitrary 10s intervals.    |
+| [#39](https://github.com/shouri123/Late-Meet/issues/39) | Context Menu Capturer for Generalized Tab Audio Integration          | 🟡 Intermediate | Expands transcription capabilities to YouTube, Zoom, or WebEx tabs.               |
+| [#41](https://github.com/shouri123/Late-Meet/issues/41) | Sleek Dark/Light Mode Theme Synchronization & Accent Color Picker    | 🟡 Intermediate | Enhances options and popups visual aesthetics using modern CSS variables.         |
+| [#42](https://github.com/shouri123/Late-Meet/issues/42) | Real-Time Canvas Audio Waveform Visualizer in Dashboard Panel        | 🔴 Advanced     | Animates live canvas voice waves when recording, making the UI feel alive.        |
+| [#43](https://github.com/shouri123/Late-Meet/issues/43) | Interactive Action-Item Checker with Native Chrome Toast Alerts      | 🟡 Intermediate | Triggers native desktop notifications and interactive in-panel checklists.        |
+| [#44](https://github.com/shouri123/Late-Meet/issues/44) | Local API Cost & Token Usage Statistics Tracker Dashboard Widget     | 🟢 Beginner     | Provides live metrics on token counts and estimated billing in USD.               |
+
+### 🐛 Category 2: Bug Reports
+
+| Issue #                                                 | Title                                                               | Difficulty      | Value Proposition                                                             |
+| :------------------------------------------------------ | :------------------------------------------------------------------ | :-------------- | :---------------------------------------------------------------------------- |
+| [#40](https://github.com/shouri123/Late-Meet/issues/40) | Asynchronous Onboarding Key Validation with UX Shaking Feedback     | 🟢 Beginner     | Stops silent background transcription failures caused by expired/typo'd keys. |
+| [#45](https://github.com/shouri123/Late-Meet/issues/45) | MediaRecorder Audio State Synchronization Crash on Sudden Tab Close | 🟡 Intermediate | Gracefully terminates and saves offscreen media pipelines when a tab crashes. |
+
+### 📄 Category 3: General Refactoring & Improvements (Blank Issues)
+
+| Issue #                                                 | Title                                                                      | Difficulty  | Value Proposition                                                             |
+| :------------------------------------------------------ | :------------------------------------------------------------------------- | :---------- | :---------------------------------------------------------------------------- |
+| [#46](https://github.com/shouri123/Late-Meet/issues/46) | Migrate Core Utility Modules (`api.js`, `prompts.js`) to Strict TypeScript | 🟢 Beginner | Enforces strict type checking and deletes legacy JavaScript compile includes. |
+
+### 🛡️ Category 4: Security & Compliance Reports
+
+| Issue #                                                 | Title                                                             | Difficulty      | Value Proposition                                                                 |
+| :------------------------------------------------------ | :---------------------------------------------------------------- | :-------------- | :-------------------------------------------------------------------------------- |
+| [#47](https://github.com/shouri123/Late-Meet/issues/47) | Secure Storage for API Credentials using RAM-Only Session Storage | 🟡 Intermediate | Prevents malicious disk extraction of API keys by migrating to `storage.session`. |
 
 ---
 
