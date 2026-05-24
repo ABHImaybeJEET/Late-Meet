@@ -648,7 +648,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (state.actionItems?.length) {
       markdown += `## Action Items\n`;
       state.actionItems.forEach((a: ActionItem) => {
-        markdown += `- [ ] ${a.task}`;
+        const task = resolveActionKey(a);
+        const done = actionStatuses.get(task) === true;
+        markdown += done ? `- [x] ${task}` : `- [ ] ${task}`;
         if (a.owner) markdown += ` → ${a.owner}`;
         if (a.deadline) markdown += ` (due: ${a.deadline})`;
         markdown += "\n";
@@ -687,17 +689,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const exportBtn = document.getElementById("export-btn") as HTMLButtonElement;
   const exportDropdown = document.getElementById("export-dropdown") as HTMLDivElement;
 
-  if (state.actionItems?.length) {
-    markdown += `## Action Items\n`;
-    state.actionItems.forEach((a: ActionItem) => {
-      const task = resolveActionKey(a);
-      const done = actionStatuses.get(task) === true;
-      markdown += done ? `- [x] ${task}` : `- [ ] ${task}`;
-      if (a.owner) markdown += ` → ${a.owner}`;
-      if (a.deadline) markdown += ` (due: ${a.deadline})`;
-      markdown += "\n";
-    });
-  }
   exportBtn?.addEventListener("click", () => {
     const isHidden = exportDropdown.hasAttribute("hidden");
     if (isHidden) {
