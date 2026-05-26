@@ -470,14 +470,6 @@ Return a JSON object with these exact keys:
 
   const parsed = JSON.parse(content);
   state.summary = parsed.summary || state.summary;
-  state.topics = Array.isArray(parsed.topics) ? parsed.topics : state.topics;
-  state.decisions = Array.isArray(parsed.decisions) ? parsed.decisions : state.decisions;
-  if (Array.isArray(parsed.actionItems)) {
-    state.actionItems = parsed.actionItems;
-    notifyNewActionItems(state.actionItems);
-  }
-  state.currentTopic = parsed.currentTopic || state.currentTopic;
-  state.sentiment = parsed.sentiment || state.sentiment;
   if (topicDetectionEnabled) {
     state.topics = Array.isArray(parsed.topics) ? parsed.topics : state.topics;
     state.currentTopic = parsed.currentTopic || state.currentTopic;
@@ -491,7 +483,10 @@ Return a JSON object with these exact keys:
     state.decisions = [];
   }
   if (actionExtractionEnabled) {
-    state.actionItems = Array.isArray(parsed.actionItems) ? parsed.actionItems : state.actionItems;
+    if (Array.isArray(parsed.actionItems)) {
+      state.actionItems = parsed.actionItems;
+      notifyNewActionItems(state.actionItems);
+    }
   } else {
     state.actionItems = [];
   }
