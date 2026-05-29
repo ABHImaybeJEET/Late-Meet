@@ -66,7 +66,8 @@ Respond in this exact JSON format:
 {
   "summary": "Comprehensive 2-4 sentence rolling summary of everything discussed so far, building on previous context",
   "topics": [
-    { "name": "descriptive topic name", "startTime": "timestamp or null", "status": "active|completed", "duration": "estimated duration or null" }
+    // Each topic represents a subject discussed, with timing and status information
+    { "name": "descriptive topic name", "startTime": "timestamp or null", "status": "active|completed|unresolved", "duration": "estimated duration or null" }
   ],
   "decisions": [
     { "text": "clear statement of what was decided", "timestamp": "when mentioned", "by": "who made/announced the decision or null", "classification": "finalized|tentative" }
